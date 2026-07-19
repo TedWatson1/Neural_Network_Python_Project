@@ -7,6 +7,8 @@ class Network:
         if activation_function.lower().replace(' ', '') not in ['relu', 'leakyrelu', 'linear', 'sigmoid', 'tanh', 'softplus', 'elu']:
             raise ValueError('Activation Function Not Recognised, maybe try:\nRelu, Leaky Relu, Linear, Sigmoid, Tanh, SoftPlus or ELU')
         
+        self.loss = math.inf
+
         self.activation_function = activation_function.lower().replace(' ', '')
 
         self.neuron_numbers = num_neurons_per_layer
@@ -70,7 +72,9 @@ class Network:
             case 'elu':
                 return np.where(y > 0, 1.0, np.exp(np.clip(y, -500, 500)))
     
-    
+    def get_loss(self):
+        return self.loss
+
     def forward(self, x):
         inputs = x
         for index, layer in enumerate(self.layers):
@@ -83,6 +87,7 @@ class Network:
     def backward(self, y_pred, y_true):
         loss_grad = (y_pred - y_true)
         loss_grad *= 2/y_true.size
+        self.loss = np.mean((y_pred - y_true) ** 2)
         reversed_layers = list(reversed(self.layers))
         gradients = list()
         # Backward propogation through the layers
