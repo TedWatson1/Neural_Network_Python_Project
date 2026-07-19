@@ -2,7 +2,6 @@ import numpy as np
 
 class Layer:
     def __init__(self, n_inputs, n_outputs, activation):
-        # 'relu', 'leakyrelu', 'linear', 'sigmoid', 'tanh', 'softplus', 'elu'
         match activation:
             case 'relu':
                 self.W = np.random.randn(n_inputs, n_outputs) * np.sqrt(2 / n_inputs)
